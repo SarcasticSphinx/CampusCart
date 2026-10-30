@@ -13,17 +13,19 @@ import { cartTotal } from "@/lib/cart";
 import { formatPrice, type Product } from "@/lib/products";
 
 type BagSidebarProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   cart: CartItem[];
   error: string;
   onAdd: (product: Product) => void;
   onQuantityChange: (id: string, quantity: number) => void;
 };
 
-export function BagSidebar({ cart, error, onAdd, onQuantityChange }: BagSidebarProps) {
+export function BagSidebar({ cart, error, onAdd, onQuantityChange, open, onOpenChange }: BagSidebarProps) {
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger render={<Button variant="ghost" aria-label={`Open bag, ${count} items`} />}>
         <ShoppingBag aria-hidden="true" className="size-4" />
         Your bag <Badge variant="secondary">{count}</Badge>

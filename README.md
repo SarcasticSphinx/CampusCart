@@ -7,11 +7,12 @@ A small campus store built for CSE 3206. Next.js App Router, TypeScript, Prisma 
 - Responsive photography-led catalogue with category filters, search, self-hosted Outfit typography, and a DM Serif Display wordmark.
 - Locally hosted product photos and bag thumbnails; image paths stored in Neon. Source links and license credits are available at `/credits`.
 - In-memory shopping bag in a responsive shadcn Sheet sidebar, with quantity controls, stock limits, and integer money calculations.
-- shadcn Sheet, Button, Badge, Card, Input, Separator, Empty, and Alert components with Lucide icons.
+- Shared sticky header and bag state across pages; shadcn add-to-bag toasts with a View bag action.
+- shadcn Sheet, Toast, Button, Badge, Card, Input, Separator, Empty, and Alert components with Lucide icons.
 - Database-backed catalogue, Prisma schema for users, products, orders, and order items; reusable server-only client and repeatable product seed.
 - Cart unit tests, coverage reporting, and a GitHub Actions workflow.
 
-The homepage reads products from Neon on the server at request time. The seed supplies the initial six products and fills missing image paths without replacing existing images, prices, or stock. Stock photography illustrates the catalogue and should be replaced with actual SKU photography before commercial launch. The cart resets on refresh. Authentication, checkout, persistent carts, admin screens, design patterns, Selenium tests, and the final lab report remain future increments. The database schema alone is not evidence of a working persistent application.
+The homepage reads products from Neon on the server at request time. The seed supplies the initial six products and fills missing image paths without replacing existing images, prices, or stock. Stock photography illustrates the catalogue and should be replaced with actual SKU photography before commercial launch. The cart survives client-side navigation between pages and resets on refresh. Authentication, checkout, persistent carts, admin screens, design patterns, Selenium tests, and the final lab report remain future increments. The database schema alone is not evidence of a working persistent application.
 
 ## Run locally
 

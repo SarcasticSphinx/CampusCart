@@ -6,7 +6,7 @@ Planned roles: customer and administrator. Six modules: accounts, catalogue, car
 
 | Story | Acceptance criterion | Status |
 | --- | --- | --- |
-| Browse and search products | Search and category filters show matching products | Demo data implemented |
+| Browse and search products | Search and category filters show matching products | Neon-backed catalogue implemented |
 | Manage my bag | Add, increase, decrease, and remove lines without exceeding stock | In-memory implemented |
 | Sign in | Customer identity is verified; admin access is enforced on the server | Planned |
 | Place an order | Server recalculates prices and atomically saves the order and reduces stock | Planned |
@@ -17,7 +17,7 @@ Non-functional goals: responsive layout at mobile and desktop widths; keyboard-a
 
 ## Process
 
-Use incremental delivery. Increment 1: scaffold, preview catalogue and cart, Prisma setup. Increment 2: database-backed catalogue, authentication and persistent carts. Increment 3: checkout, order history, administration. Increment 4: tests, patterns, diagrams, report, demo.
+Use incremental delivery. Increment 1: scaffold, Neon-backed catalogue, preview cart, Prisma setup, Lucide icons. Increment 2: authentication and persistent carts. Increment 3: checkout, order history, administration. Increment 4: tests, patterns, diagrams, report, demo.
 
 Implement one complete purchase flow before adding optional features. Avoid microservices, a separate backend application, a global state library, and generic repository hierarchies unless a concrete need appears.
 

@@ -9,7 +9,13 @@ async function main() {
   try {
     for (const product of demoProducts) {
       // Re-running the seed must not reset stock or prices changed by an administrator.
-      await db.product.upsert({ where: { id: product.id }, create: product, update: {} });
+      const saved = await db.product.upsert({ where: { id: product.id }, create: product, update: {} });
+      if (saved.description === null || saved.specifications === null) {
+        await db.product.update({
+          where: { id: product.id },
+          data: { description: saved.description ?? product.description, specifications: saved.specifications ?? product.specifications },
+        });
+      }
       await db.product.updateMany({
         where: { id: product.id, imageUrl: null },
         data: { imageUrl: product.imageUrl },

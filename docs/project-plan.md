@@ -6,7 +6,7 @@ Planned roles: customer and administrator. Six modules: accounts, catalogue, car
 
 | Story | Acceptance criterion | Status |
 | --- | --- | --- |
-| Browse and search products | Search and category filters show matching products | Neon-backed catalogue implemented |
+| Browse and search products | Search and category filters show matching products; detail pages show descriptions and specifications | Neon-backed catalogue and detail pages implemented |
 | Manage my bag | Add, increase, decrease, and remove lines without exceeding stock | In-memory implemented |
 | Sign in | Customer identity is verified; admin access is enforced on the server | Planned |
 | Place an order | Server recalculates prices and atomically saves the order and reduces stock | Planned |

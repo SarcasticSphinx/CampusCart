@@ -35,6 +35,8 @@ model Product {
   price     Int         // Paisa; never floating-point money.
   stock     Int         @default(0)
   imageUrl  String?
+  description String?
+  specifications Json?
   items     OrderItem[]
   createdAt DateTime    @default(now())
 }

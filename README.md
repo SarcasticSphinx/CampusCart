@@ -5,7 +5,8 @@ A small campus store built for CSE 3206. Next.js App Router, TypeScript, Prisma 
 ## Current increment
 
 - Minimal responsive catalogue with category filters and search.
-- In-memory shopping bag with quantity controls, stock limits, and integer money calculations.
+- In-memory shopping bag in a responsive shadcn Sheet sidebar, with quantity controls, stock limits, and integer money calculations.
+- shadcn Sheet, Button, Badge, Card, Input, Separator, Empty, and Alert components with Lucide icons.
 - Database-backed catalogue, Prisma schema for users, products, orders, and order items; reusable server-only client and repeatable product seed.
 - Cart unit tests, coverage reporting, and a GitHub Actions workflow.
 

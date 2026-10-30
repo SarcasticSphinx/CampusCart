@@ -10,6 +10,10 @@ async function main() {
     for (const product of demoProducts) {
       // Re-running the seed must not reset stock or prices changed by an administrator.
       await db.product.upsert({ where: { id: product.id }, create: product, update: {} });
+      await db.product.updateMany({
+        where: { id: product.id, imageUrl: null },
+        data: { imageUrl: product.imageUrl },
+      });
     }
   } finally {
     await db.$disconnect();

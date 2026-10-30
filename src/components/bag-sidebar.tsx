@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleAlert, Minus, Plus, ShoppingBag } from "lucide-react";
+import { ProductImage } from "@/components/product-image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,7 @@ export function BagSidebar({ cart, error, onAdd, onQuantityChange }: BagSidebarP
               {cart.map((item) => (
                 <li key={item.id} className="space-y-3">
                   <div className="flex items-start justify-between gap-4">
-                    <div><p className="font-medium">{item.name}</p><p className="mt-1 text-xs text-muted-foreground">{formatPrice(item.price)} each</p></div>
+                    <div className="flex min-w-0 items-center gap-3"><div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted"><ProductImage product={item} sizes="64px" /></div><div><p className="font-medium">{item.name}</p><p className="mt-1 text-xs text-muted-foreground">{formatPrice(item.price)} each</p></div></div>
                     <span className="shrink-0 font-medium">{formatPrice(item.price * item.quantity)}</span>
                   </div>
                   <div className="flex items-center gap-3">

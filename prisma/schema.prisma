@@ -34,6 +34,7 @@ model Product {
   category  String
   price     Int         // Paisa; never floating-point money.
   stock     Int         @default(0)
+  imageUrl  String?
   items     OrderItem[]
   createdAt DateTime    @default(now())
 }

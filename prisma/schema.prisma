@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(CUSTOMER)
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id        String      @id @default(cuid())
+  name      String
+  category  String
+  price     Int         // Paisa; never floating-point money.
+  stock     Int         @default(0)
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  deliveryAddress String
+  status          OrderStatus @default(PENDING)
+  total           Int
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  name      String  // Product name and price snapshots at purchase time.
+  unitPrice Int
+  quantity  Int
+
+  @@index([orderId])
+  @@index([productId])
+}

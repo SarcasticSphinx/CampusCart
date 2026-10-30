@@ -3,16 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowDown, ArrowRight, ArrowUpRight, BookOpen, NotebookPen, Package, Plus, Search, SearchX, LayoutGrid, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, BookOpen, NotebookPen, Package, Plus, Search, SearchX, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { BagSidebar } from "@/components/bag-sidebar";
+import { useShop } from "@/components/shop-provider";
 import { ProductImage } from "@/components/product-image";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
-import { addToCart, setQuantity, type CartItem } from "@/lib/cart";
 import { formatPrice, type Product } from "@/lib/products";
 
 const categories = [
@@ -25,26 +24,15 @@ const categories = [
 export function Storefront({ products }: { products: Product[] }) {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [error, setError] = useState("");
+  const { cart, add } = useShop();
   const visibleProducts = products.filter((product) =>
     (category === "All" || product.category === category) && product.name.toLowerCase().includes(query.toLowerCase())
   );
 
-  function add(product: Product) {
-    try { setCart(addToCart(cart, product)); setError(""); }
-    catch (error) { setError(error instanceof Error ? error.message : "Unable to add item."); }
-  }
-
   return (
     <>
-      <div className="flex items-center justify-center gap-2 bg-primary px-4 py-2 text-center text-xs tracking-wide text-primary-foreground"><Sparkles aria-hidden="true" className="size-3" />Good things for your next chapter.</div>
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-        <header className="flex items-center justify-between gap-4 border-b py-5 sm:py-6">
-          <Link href="/" aria-label="CampusCart home" className="font-brand text-3xl tracking-[-0.06em] sm:text-4xl">campus<span className="italic text-primary">cart</span><span className="text-[#bb603e]">.</span></Link>
-          <nav aria-label="Main navigation" className="hidden items-center gap-7 text-sm text-muted-foreground md:flex"><a href="#collection" className="transition-colors hover:text-primary">The collection</a><a href="#about" className="transition-colors hover:text-primary">Our little philosophy</a></nav>
-          <BagSidebar cart={cart} error={error} onAdd={add} onQuantityChange={(id, quantity) => setCart(setQuantity(cart, id, quantity))} />
-        </header>
+
         <main>
           <section className="grid items-center gap-9 py-9 sm:py-12 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:py-14">
             <div className="py-3 lg:py-6">
@@ -60,7 +48,7 @@ export function Storefront({ products }: { products: Product[] }) {
             </div>
           </section>
           <Separator />
-          <section id="collection" aria-label="Products" className="scroll-mt-8 pb-14 pt-10 sm:pb-20 sm:pt-14">
+          <section id="collection" aria-label="Products" className="scroll-mt-40 pb-14 pt-10 sm:pb-20 sm:pt-14">
             <div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-primary">Considered, not complicated</p><h2 className="text-3xl font-medium tracking-tight sm:text-4xl">Your everyday lineup.</h2></div><p className="text-sm text-muted-foreground">{visibleProducts.length} {visibleProducts.length === 1 ? "essential" : "essentials"}, endless possibilities.</p></div>
             <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap gap-1.5" aria-label="Product categories">
@@ -82,7 +70,7 @@ export function Storefront({ products }: { products: Product[] }) {
             </div>
             {visibleProducts.length === 0 && <Empty className="py-16"><EmptyHeader><EmptyMedia variant="icon"><SearchX aria-hidden="true" /></EmptyMedia><EmptyTitle>No products found</EmptyTitle><EmptyDescription>Try another search or category.</EmptyDescription></EmptyHeader></Empty>}
           </section>
-          <section id="about" className="mb-12 flex flex-col justify-between gap-6 rounded-2xl bg-primary px-7 py-9 text-primary-foreground sm:flex-row sm:items-center sm:px-10"><div><p className="mb-3 text-[10px] uppercase tracking-[0.18em] text-primary-foreground/70">For wherever the day takes you</p><h2 className="font-brand text-3xl sm:text-4xl">A little more ready.<br /><span className="italic">A little more you.</span></h2></div><div className="max-w-xs"><p className="text-sm leading-relaxed text-primary-foreground/80">We believe the things you carry should make everyday life feel a little better. Simple choices, with a purpose.</p><a href="#collection" className="mt-5 inline-flex items-center gap-3 text-sm underline underline-offset-4">Find your essentials<ArrowRight aria-hidden="true" className="size-4" /></a></div></section>
+          <section id="about" className="scroll-mt-40 mb-12 flex flex-col justify-between gap-6 rounded-2xl bg-primary px-7 py-9 text-primary-foreground sm:flex-row sm:items-center sm:px-10"><div><p className="mb-3 text-[10px] uppercase tracking-[0.18em] text-primary-foreground/70">For wherever the day takes you</p><h2 className="font-brand text-3xl sm:text-4xl">A little more ready.<br /><span className="italic">A little more you.</span></h2></div><div className="max-w-xs"><p className="text-sm leading-relaxed text-primary-foreground/80">We believe the things you carry should make everyday life feel a little better. Simple choices, with a purpose.</p><a href="#collection" className="mt-5 inline-flex items-center gap-3 text-sm underline underline-offset-4">Find your essentials<ArrowRight aria-hidden="true" className="size-4" /></a></div></section>
         </main>
         <footer className="flex flex-wrap items-center justify-between gap-5 border-t py-7"><div><p className="font-brand text-2xl tracking-[-0.06em]">campus<span className="italic text-primary">cart</span>.</p><p className="mt-1 text-xs text-muted-foreground">Good things for campus life.</p></div><div className="flex flex-wrap items-center gap-5 text-xs text-muted-foreground"><Link href="/credits" className="hover:text-primary">Photography credits</Link><span>Prices in BDT</span><span>© {new Date().getFullYear()} CampusCart</span></div></footer>
       </div>

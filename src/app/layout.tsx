@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SiteHeader } from "@/components/site-header";
+import { ShopProvider } from "@/components/shop-provider";
+import { Toaster } from "@/components/ui/toast";
 
 const outfit = localFont({
   src: "../../node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2",
@@ -23,5 +26,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" className={`${outfit.variable} ${wordmark.variable}`}><body className="min-h-screen bg-background font-sans text-foreground antialiased">{children}</body></html>;
+  return <html lang="en" className={`${outfit.variable} ${wordmark.variable}`}><body className="min-h-screen bg-background font-sans text-foreground antialiased"><Toaster><ShopProvider><SiteHeader />{children}</ShopProvider></Toaster></body></html>;
 }

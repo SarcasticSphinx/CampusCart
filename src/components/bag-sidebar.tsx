@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CircleAlert, Minus, Plus, ShoppingBag } from "lucide-react";
 import { ProductImage } from "@/components/product-image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -51,7 +52,7 @@ export function BagSidebar({ cart, error, onAdd, onQuantityChange, open, onOpenC
               {cart.map((item) => (
                 <li key={item.id} className="space-y-3">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex min-w-0 items-center gap-3"><div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted"><ProductImage product={item} sizes="64px" /></div><div><p className="font-medium">{item.name}</p><p className="mt-1 text-xs text-muted-foreground">{formatPrice(item.price)} each</p></div></div>
+                    <div className="flex min-w-0 items-center gap-3"><div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted"><ProductImage product={item} sizes="64px" /></div><div><Link href={`/products/${encodeURIComponent(item.id)}`} onClick={() => onOpenChange(false)} className="font-medium hover:underline underline-offset-4">{item.name}</Link><p className="mt-1 text-xs text-muted-foreground">{formatPrice(item.price)} each</p></div></div>
                     <span className="shrink-0 font-medium">{formatPrice(item.price * item.quantity)}</span>
                   </div>
                   <div className="flex items-center gap-3">

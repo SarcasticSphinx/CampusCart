@@ -16,7 +16,8 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "docs:lint": "npx --yes @redocly/cli@2.82.0 lint public/openapi.json"
+    "docs:lint": "npx --yes @redocly/cli@2.82.0 lint public/openapi.json",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -42,10 +43,12 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/selenium-webdriver": "^4.35.7",
     "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "prisma": "^7.10.1",
+    "selenium-webdriver": "^4.51.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",

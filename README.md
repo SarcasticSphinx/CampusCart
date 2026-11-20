@@ -50,6 +50,7 @@ npm run lint
 npm run typecheck
 npm run test:coverage
 npm run build
+npm run test:e2e   # Selenium; needs the app running on E2E_BASE_URL (default http://localhost:3000)
 npm run docs:lint  # Redocly lint of the OpenAPI description in public/openapi.json
 ```
 

@@ -16,6 +16,7 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
+    "docs:lint": "npx --yes @redocly/cli@2.82.0 lint public/openapi.json",
     "test:e2e": "vitest run --config vitest.e2e.config.ts"
   },
   "dependencies": {

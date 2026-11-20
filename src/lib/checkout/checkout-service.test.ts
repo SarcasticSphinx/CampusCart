@@ -55,7 +55,7 @@ describe("CheckoutService", () => {
   });
 
   it("ignores client-sent prices and uses database prices", async () => {
-    const tampered = { ...request, items: [{ productId: "notebook", quantity: 1, price: 1 }] } as CheckoutRequest;
+    const tampered = { ...request, items: [{ productId: "notebook", quantity: 1, price: 1 }] } as unknown as CheckoutRequest;
     const confirmation = await service.placeOrder({ ...tampered, promoCode: undefined });
     expect(confirmation.total).toBe(12000);
   });

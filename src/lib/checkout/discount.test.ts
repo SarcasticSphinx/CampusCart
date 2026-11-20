@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { MinimumSpendDiscount, NoDiscount, PercentageDiscount, discountForCode } from "./discount";
+import { MinimumSpendDiscount, NoDiscount, PercentageDiscount, discountForCode, type DiscountStrategy } from "./discount";
 
 describe("discount strategies", () => {
   it("NoDiscount never reduces the subtotal", () => {
-    expect(new NoDiscount().discountFor(24000)).toBe(0);
+    const strategy: DiscountStrategy = new NoDiscount();
+    expect(strategy.discountFor(24000)).toBe(0);
   });
 
   it("PercentageDiscount rounds down to whole paisa", () => {

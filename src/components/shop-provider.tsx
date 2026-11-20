@@ -12,6 +12,7 @@ type ShopState = {
   setBagOpen: (open: boolean) => void;
   add: (product: Product) => void;
   changeQuantity: (id: string, quantity: number) => void;
+  clear: () => void;
 };
 
 const ShopContext = createContext<ShopState | null>(null);
@@ -51,7 +52,12 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  return <ShopContext.Provider value={{ cart, error, bagOpen, setBagOpen, add, changeQuantity }}>{children}</ShopContext.Provider>;
+  function clear() {
+    setCart([]);
+    setError("");
+  }
+
+  return <ShopContext.Provider value={{ cart, error, bagOpen, setBagOpen, add, changeQuantity, clear }}>{children}</ShopContext.Provider>;
 }
 
 export function useShop() {

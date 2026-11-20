@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CircleAlert, Minus, Plus, ShoppingBag } from "lucide-react";
+import { ArrowRight, CircleAlert, Minus, Plus, ShoppingBag } from "lucide-react";
 import { ProductImage } from "@/components/product-image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -69,8 +69,9 @@ export function BagSidebar({ cart, error, onAdd, onQuantityChange, open, onOpenC
         <Separator />
         <SheetFooter className="gap-4 p-6">
           <div className="flex justify-between font-semibold"><span>Subtotal</span><span>{formatPrice(cartTotal(cart))}</span></div>
+          {cart.length > 0 && <Button render={<Link href="/checkout" />} onClick={() => onOpenChange(false)} className="h-11 rounded-full">Checkout<ArrowRight aria-hidden="true" className="size-4" /></Button>}
           {cart.length > 0 && <SheetClose render={<Button variant="outline" />}>Continue shopping</SheetClose>}
-          <p className="text-xs leading-relaxed text-muted-foreground">Your bag resets on refresh. Checkout will be available in a later increment.</p>
+          <p className="text-xs leading-relaxed text-muted-foreground">Your bag resets on refresh. Prices and stock are confirmed at checkout.</p>
         </SheetFooter>
       </SheetContent>
     </Sheet>

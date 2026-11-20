@@ -12,6 +12,16 @@ enum Role {
   ADMIN
 }
 
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  CAMPUS_WALLET
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -47,7 +57,13 @@ model Order {
   user            User        @relation(fields: [userId], references: [id])
   deliveryAddress String
   status          OrderStatus @default(PENDING)
+  subtotal        Int           @default(0)
+  discount        Int           @default(0)
+  promoCode       String?
   total           Int
+  paymentMethod   PaymentMethod @default(CASH_ON_DELIVERY)
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentReference String?
   items           OrderItem[]
   createdAt       DateTime    @default(now())
 

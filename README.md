@@ -50,7 +50,10 @@ npm run lint
 npm run typecheck
 npm run test:coverage
 npm run build
+npm run docs:lint  # Redocly lint of the OpenAPI description in public/openapi.json
 ```
+
+The API is documented with OpenAPI 3.1 in `public/openapi.json`. Run the app and open http://localhost:3000/api-docs for Swagger UI. `src/app/api/openapi.contract.test.ts` fails if a route handler is added without documenting it, or if the order response drifts from the schema.
 
 Coverage currently measures only cart business logic, not the UI, database integration, or the whole application. Open `coverage/index.html` after a coverage run. CI is configured for pushes and pull requests; check the Actions tab for actual hosted results.
 

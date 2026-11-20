@@ -1,0 +1,430 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CampusCart API",
+    "version": "1.0.0",
+    "description": "HTTP API behind the CampusCart storefront. Money values are integers in paisa (100 paisa = 1 BDT).",
+    "license": {
+      "name": "Coursework (CSE 3206, RUET)",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "The server hosting this document"
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Catalogue"
+    },
+    {
+      "name": "Orders",
+      "description": "Checkout and order lookup"
+    }
+  ],
+  "paths": {
+    "/api/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "listProducts",
+        "summary": "List the catalogue",
+        "responses": {
+          "200": {
+            "description": "All products ordered by category and name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "placeOrder",
+        "summary": "Place an order",
+        "description": "Prices are taken from the database, not from the request. Stock is reserved in a transaction and released again if the payment is declined.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              },
+              "example": {
+                "customer": {
+                  "name": "Rahim Uddin",
+                  "email": "rahim@student.ruet.ac.bd"
+                },
+                "address": "Hall 3, RUET, Rajshahi 6204",
+                "items": [
+                  {
+                    "productId": "notebook",
+                    "quantity": 2
+                  }
+                ],
+                "promoCode": "STUDENT10",
+                "paymentMethod": "CASH_ON_DELIVERY"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order placed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderConfirmation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "402": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/api/orders/{id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "getOrder",
+        "summary": "Get an order",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The order with its lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Error": {
+        "description": "The request could not be completed. The message is safe to show to the customer.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Promo code not recognised"
+          }
+        }
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": [
+          "CASH_ON_DELIVERY",
+          "CAMPUS_WALLET"
+        ]
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "PAID"
+        ]
+      },
+      "OrderStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "CONFIRMED",
+          "COMPLETED",
+          "CANCELLED"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "price",
+          "stock",
+          "imageUrl"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "notebook"
+          },
+          "name": {
+            "type": "string",
+            "example": "Everyday notebook"
+          },
+          "category": {
+            "type": "string",
+            "example": "Stationery"
+          },
+          "price": {
+            "type": "integer",
+            "description": "Paisa",
+            "example": 12000
+          },
+          "stock": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 20
+          },
+          "imageUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "/images/products/notebook.jpg"
+          }
+        }
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "required": [
+          "customer",
+          "address",
+          "items",
+          "paymentMethod"
+        ],
+        "properties": {
+          "customer": {
+            "type": "object",
+            "required": [
+              "name",
+              "email"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "maxLength": 200
+              }
+            }
+          },
+          "address": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 300
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "required": [
+                "productId",
+                "quantity"
+              ],
+              "properties": {
+                "productId": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          },
+          "promoCode": {
+            "type": "string",
+            "maxLength": 30,
+            "description": "STUDENT10 or SAVE50"
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          }
+        }
+      },
+      "OrderConfirmation": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "subtotal",
+          "discount",
+          "total",
+          "paymentStatus",
+          "paymentReference"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "subtotal": {
+            "type": "integer"
+          },
+          "discount": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "paymentStatus": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "paymentReference": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderLine": {
+        "type": "object",
+        "required": [
+          "productId",
+          "name",
+          "unitPrice",
+          "quantity"
+        ],
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name at the time of purchase"
+          },
+          "unitPrice": {
+            "type": "integer",
+            "description": "Price in paisa at the time of purchase"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "subtotal",
+          "discount",
+          "promoCode",
+          "total",
+          "paymentMethod",
+          "paymentStatus",
+          "paymentReference",
+          "deliveryAddress",
+          "createdAt",
+          "customerName",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "subtotal": {
+            "type": "integer"
+          },
+          "discount": {
+            "type": "integer"
+          },
+          "promoCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "total": {
+            "type": "integer"
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "paymentStatus": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "paymentReference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deliveryAddress": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderLine"
+            }
+          }
+        }
+      }
+    }
+  }
+}

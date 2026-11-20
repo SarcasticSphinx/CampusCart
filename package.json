@@ -15,7 +15,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "docs:lint": "npx --yes @redocly/cli@2.82.0 lint public/openapi.json"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

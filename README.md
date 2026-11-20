@@ -50,6 +50,7 @@ npm run lint
 npm run typecheck
 npm run test:coverage
 npm run build
+npm run test:e2e   # Selenium; needs the app running on E2E_BASE_URL (default http://localhost:3000)
 ```
 
 Coverage currently measures only cart business logic, not the UI, database integration, or the whole application. Open `coverage/index.html` after a coverage run. CI is configured for pushes and pull requests; check the Actions tab for actual hosted results.

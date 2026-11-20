@@ -10,9 +10,20 @@ export async function startBrowser(): Promise<WebDriver> {
   return new Builder().forBrowser("chrome").setChromeOptions(options).build();
 }
 
+/**
+ * Polls with a fresh lookup each time. Holding on to one element breaks after client-side navigation,
+ * because React replaces the node and the old reference goes stale.
+ */
 export async function visible(driver: WebDriver, locator: By, timeout = 10_000): Promise<WebElement> {
-  const element = await driver.wait(until.elementLocated(locator), timeout);
-  return driver.wait(until.elementIsVisible(element), timeout);
+  return driver.wait(async () => {
+    try {
+      const element = await driver.findElement(locator);
+      return (await element.isDisplayed()) ? element : null;
+    } catch (error) {
+      if (error instanceof Error && ["NoSuchElementError", "StaleElementReferenceError"].includes(error.name)) return null;
+      throw error;
+    }
+  }, timeout, `Waiting for ${locator} to be visible`) as Promise<WebElement>;
 }
 
 export function byText(tag: string, text: string): By {
@@ -48,6 +59,8 @@ export async function bagCount(driver: WebDriver): Promise<number> {
 export async function addProductToBag(driver: WebDriver, productId: string, times = 1) {
   await click(driver, By.css("a[aria-label='CampusCart home']"));
   await click(driver, By.css(`#collection a[href='/products/${productId}']`));
+  // Client-side navigation: wait until the product page has replaced the catalogue before using its button.
+  await driver.wait(until.urlContains(`/products/${productId}`), 10_000);
   const addButton = By.xpath("//button[normalize-space(.)='Add to bag']");
   for (let i = 0; i < times; i++) {
     const before = await bagCount(driver);

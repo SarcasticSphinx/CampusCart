@@ -2,6 +2,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { By, until, type WebDriver } from "selenium-webdriver";
 import { BASE_URL, addProductToBag, byText, click, openCheckout, startBrowser, visible } from "./driver";
 
+// Scoped to the form: the toast region also has alert semantics and may still be open.
+const CHECKOUT_ERROR = "form [role='alert']";
+
 async function fillCheckout(driver: WebDriver, details: { promoCode?: string; payment?: "CASH_ON_DELIVERY" | "CAMPUS_WALLET" } = {}) {
   await openCheckout(driver);
   await driver.findElement(By.name("name")).sendKeys("Selenium Student");
@@ -35,7 +38,7 @@ describe("checkout (Selenium)", () => {
     await addProductToBag(driver, "pens");
     await fillCheckout(driver, { promoCode: "FREESTUFF" });
 
-    expect(await (await visible(driver, By.css("[role='alert']"))).getText()).toContain("Promo code not recognised");
+    expect(await (await visible(driver, By.css(CHECKOUT_ERROR))).getText()).toContain("Promo code not recognised");
     expect(await driver.getCurrentUrl()).toBe(`${BASE_URL}/checkout`);
   });
 
@@ -44,7 +47,7 @@ describe("checkout (Selenium)", () => {
     await addProductToBag(driver, "tote", 10); // BDT 3,500 + BDT 2,500 is above the BDT 5,000 wallet limit
     await fillCheckout(driver, { payment: "CAMPUS_WALLET" });
 
-    expect(await (await visible(driver, By.css("[role='alert']"))).getText()).toContain("Insufficient wallet balance");
+    expect(await (await visible(driver, By.css(CHECKOUT_ERROR))).getText()).toContain("Insufficient wallet balance");
   });
 
   it("explains that checkout needs items when the bag is empty", async () => {
